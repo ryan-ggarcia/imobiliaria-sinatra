@@ -1,0 +1,260 @@
+openapi: 3.0.3
+info:
+  title: API Imobiliária
+  description: |
+    API de locação de imóveis (PFS2) em Sinatra.
+
+    **Como autenticar no Swagger:** execute `POST /login` com e-mail e senha.
+    O servidor grava o token no cookie `token-pfs2` e o navegador passa a
+    enviá-lo sozinho nas próximas chamadas. Para sair, execute `POST /logout`.
+  version: 1.0.0
+servers:
+  - url: /
+    description: Servidor atual
+
+tags:
+  - name: Login
+  - name: Usuário
+  - name: Imóvel
+  - name: Locação
+
+# todas as rotas exigem o cookie, exceto as que declaram "security: []"
+security:
+  - cookieAuth: []
+
+paths:
+  /login:
+    post:
+      tags: [Login]
+      summary: Gera o token JWT e grava no cookie do navegador
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, senha]
+              properties:
+                email: { type: string, example: ana@email.com }
+                senha: { type: string, example: "123456" }
+      responses:
+        "200":
+          description: Login realizado; cookie `token-pfs2` gravado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token: { type: string }
+        "400": { $ref: "#/components/responses/Invalido" }
+        "404": { $ref: "#/components/responses/NaoEncontrado" }
+
+  /logout:
+    post:
+      tags: [Login]
+      summary: Apaga o cookie de autenticação
+      responses:
+        "200": { $ref: "#/components/responses/Sucesso" }
+        "401": { $ref: "#/components/responses/NaoAutenticado" }
+
+  /usuario:
+    get:
+      tags: [Usuário]
+      summary: Lista os usuários ativos
+      responses:
+        "200":
+          description: Lista de usuários (sem a senha)
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Usuario" }
+        "204": { description: Nenhum usuário encontrado }
+        "401": { $ref: "#/components/responses/NaoAutenticado" }
+    post:
+      tags: [Usuário]
+      summary: Cadastra um novo usuário (perfil Locatário)
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UsuarioEntrada" }
+      responses:
+        "201":
+          description: Usuário criado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Usuario" }
+        "400": { $ref: "#/components/responses/Invalido" }
+        "409":
+          description: E-mail já cadastrado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Mensagem" }
+
+  /imovel:
+    get:
+      tags: [Imóvel]
+      summary: Lista todos os imóveis
+      responses:
+        "200":
+          description: Lista de imóveis
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Imovel" }
+        "204": { description: Nenhum imóvel encontrado }
+        "401": { $ref: "#/components/responses/NaoAutenticado" }
+    post:
+      tags: [Imóvel]
+      summary: Cadastra um imóvel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ImovelEntrada" }
+      responses:
+        "201":
+          description: Imóvel criado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Imovel" }
+        "400": { $ref: "#/components/responses/Invalido" }
+        "401": { $ref: "#/components/responses/NaoAutenticado" }
+
+  /imovel/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: integer }
+    put:
+      tags: [Imóvel]
+      summary: Atualiza um imóvel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ImovelEntrada" }
+      responses:
+        "200": { $ref: "#/components/responses/Sucesso" }
+        "400": { $ref: "#/components/responses/Invalido" }
+        "401": { $ref: "#/components/responses/NaoAutenticado" }
+        "404": { $ref: "#/components/responses/NaoEncontrado" }
+    delete:
+      tags: [Imóvel]
+      summary: Exclui um imóvel
+      responses:
+        "200": { $ref: "#/components/responses/Sucesso" }
+        "401": { $ref: "#/components/responses/NaoAutenticado" }
+        "404": { $ref: "#/components/responses/NaoEncontrado" }
+        "409":
+          description: Imóvel possui contrato e não pode ser excluído
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Mensagem" }
+
+  /locacao:
+    post:
+      tags: [Locação]
+      summary: Aluga um imóvel para o usuário logado
+      description: Cria o contrato, gera 12 aluguéis mensais e marca o imóvel como indisponível, tudo em uma transação.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [imv_id]
+              properties:
+                imv_id: { type: integer, example: 1 }
+      responses:
+        "200":
+          description: Imóvel alugado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg: { type: string }
+                  ctr_id: { type: integer }
+        "400":
+          description: Imóvel inexistente ou já alugado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Mensagem" }
+        "401": { $ref: "#/components/responses/NaoAutenticado" }
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: token-pfs2
+
+  schemas:
+    Mensagem:
+      type: object
+      properties:
+        msg: { type: string }
+
+    UsuarioEntrada:
+      type: object
+      required: [usu_nome, usu_email, usu_senha]
+      properties:
+        usu_nome: { type: string, example: Ana Souza }
+        usu_email: { type: string, format: email, example: ana@email.com }
+        usu_senha: { type: string, minLength: 6, example: "123456" }
+
+    Usuario:
+      type: object
+      properties:
+        usu_id: { type: integer }
+        usu_nome: { type: string }
+        usu_email: { type: string }
+        per_id: { type: integer, description: "1 = Administrador, 2 = Locatário" }
+        usu_ativo: { type: integer, description: "1 = ativo, 0 = inativo" }
+
+    ImovelEntrada:
+      type: object
+      required: [imv_descricao, imv_cep, imv_endereco, imv_bairro, imv_cidade, imv_valor]
+      properties:
+        imv_descricao: { type: string, example: Casa 2 quartos }
+        imv_cep: { type: string, example: 19015-000 }
+        imv_endereco: { type: string, example: "Rua das Flores, 100" }
+        imv_bairro: { type: string, example: Centro }
+        imv_cidade: { type: string, example: Presidente Prudente }
+        imv_valor: { type: number, maximum: 9999.99, example: 1500.00 }
+        imv_disponivel: { type: string, enum: [S, N], default: S }
+
+    Imovel:
+      allOf:
+        - type: object
+          properties:
+            imv_id: { type: integer }
+        - $ref: "#/components/schemas/ImovelEntrada"
+
+  responses:
+    Sucesso:
+      description: Operação realizada
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Mensagem" }
+    Invalido:
+      description: Dados inválidos
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Mensagem" }
+    NaoAutenticado:
+      description: Token ausente, inválido ou expirado
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Mensagem" }
+    NaoEncontrado:
+      description: Registro não encontrado
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Mensagem" }
