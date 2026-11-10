@@ -1,12 +1,10 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import {Nunito} from "next/font/google"
+import Script from "next/script";
+import "bootstrap/dist/css/bootstrap.css";
+import BootstrapClient from "./BootstrapClient";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const nunito = Nunito({
+  variable: "--font-nunito",
   subsets: ["latin"],
 });
 
@@ -17,8 +15,9 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="pt-br" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="pt-br" className={`${nunito.variable}`}>
       <body>{children}</body>
+      <BootstrapClient/>
     </html>
   );
 }
