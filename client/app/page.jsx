@@ -1,12 +1,13 @@
 'use client'
 import { useRef, useState } from "react"
 import Button from "./components/button"
+import toast, { Toaster } from 'react-hot-toast';
 export default function LoginPage() {
 
   let email = useRef('')
   let senha = useRef('')
 
-  function cadastrar(){
+   async function cadastrar(){
     let email = email.current.value
     let senha = senha.current.value
 
@@ -17,6 +18,21 @@ export default function LoginPage() {
       erro.push("Senha inválida ou menos que 8 digitos")
     if(email.trim() == "" && senha.trim() == "")
       erro.push("Preencha todos os campos")
+
+    if(erro.length > 0){
+      let notify  = () => toast.error(erro)
+      return
+    }
+
+    let r = await fetch("https://localhost:5000/login",{
+      methos: 'POST',
+      headers: {'Content-Type':'applicatio/josn'},
+      body: JSON.stringify({
+        email: email,
+        senha: senha,
+      })
+    })
+
   }
 
   return (
@@ -49,6 +65,7 @@ export default function LoginPage() {
           <div>
             <Button texto="Entrar" type="button" funcao={cadastrar} />
           </div>
+          <Toaster/>
         </div>
       </div>
     </>
