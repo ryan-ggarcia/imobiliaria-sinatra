@@ -1,9 +1,24 @@
 'use client'
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
+import toast from "react-hot-toast"
+import { ApiClient } from "@/utils/apiCliente"
 import styles from "@/public/css/menu.module.css"
 
 const itens = [
+  {
+    href: "/admin",
+    texto: "Painel",
+    exato: true,
+    icone: (
+      <>
+        <rect x="3" y="3" width="7" height="9" rx="1.5" />
+        <rect x="14" y="3" width="7" height="5" rx="1.5" />
+        <rect x="14" y="12" width="7" height="9" rx="1.5" />
+        <rect x="3" y="16" width="7" height="5" rx="1.5" />
+      </>
+    ),
+  },
   {
     href: "/admin/usuario",
     texto: "Usuários",
@@ -48,6 +63,13 @@ function Icone({ children }) {
 
 export default function Menu() {
   const pathname = usePathname()
+  const router = useRouter()
+
+  async function sair() {
+    await ApiClient.post('/logout', {})
+    toast.success('Até logo!')
+    router.push('/')
+  }
 
   return (
     <nav className={`navbar navbar-expand-lg ${styles.sidebar}`} data-bs-theme="dark">
@@ -75,12 +97,15 @@ export default function Menu() {
         </button>
 
         <div className={`collapse navbar-collapse ${styles.colapso}`} id="menuPrincipal">
+          <p className={styles.grupo}>Gestão</p>
           <ul className={`navbar-nav ${styles.lista}`}>
-            {itens.map((item) => {
-              const ativo = pathname === item.href || pathname.startsWith(`${item.href}/`)
+            {itens.map((item, i) => {
+              const ativo = item.exato
+                ? pathname === item.href
+                : pathname === item.href || pathname.startsWith(`${item.href}/`)
 
               return (
-                <li className="nav-item" key={item.href}>
+                <li className={`nav-item ${styles.item}`} key={item.href} style={{ '--i': i }}>
                   <Link
                     href={item.href}
                     className={`nav-link ${styles.link} ${ativo ? styles.ativo : ""}`}
@@ -93,6 +118,14 @@ export default function Menu() {
               )
             })}
           </ul>
+
+          <button type="button" className={`${styles.link} ${styles.sair}`} onClick={sair}>
+            <Icone>
+              <path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3" />
+              <path d="M10 17l-5-5 5-5M5 12h11" />
+            </Icone>
+            Sair
+          </button>
         </div>
       </div>
     </nav>

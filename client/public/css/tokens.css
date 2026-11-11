@@ -1,26 +1,55 @@
 :root {
+  /* marca */
   --cor-primaria: #0f766e;
-  --cor-primaria-hover: #115e59;
+  --cor-primaria-hover: #0b5f58;
+  --cor-primaria-suave: #e6f4f2;
   --cor-sobre-primaria: #ffffff;
-  --cor-destaque: #14b8a6;
-  --cor-sobre-destaque: #0f172a;
-  --cor-fundo: #f0fdfa;
+  --cor-destaque: #2dd4bf;
+  --cor-sobre-destaque: #042f2e;
+
+  /* superfícies */
+  --cor-fundo: #f5f7f6;
   --cor-cartao: #ffffff;
-  --cor-texto: #134e4a;
-  --cor-texto-suave: #475569;
-  --cor-borda: #ccfbf1;
-  --cor-borda-campo: #64748b;
+  --cor-cartao-alt: #fafbfb;
+  --cor-texto: #0f2a28;
+  --cor-texto-suave: #5f6f6d;
+  --cor-texto-fraco: #8a9896;
+  --cor-borda: #e4eae8;
+  --cor-borda-campo: #cfd8d6;
   --cor-anel: #0f766e;
 
-  --cor-lateral: #134e4a;
-  --cor-lateral-texto: #ccfbf1;
-  --cor-lateral-hover: rgba(255, 255, 255, 0.1);
+  /* estados */
+  --cor-sucesso: #047857;
+  --cor-sucesso-suave: #e3f6ee;
+  --cor-alerta: #b45309;
+  --cor-alerta-suave: #fdf1e1;
+  --cor-perigo: #c2410c;
+  --cor-perigo-forte: #b91c1c;
+  --cor-perigo-suave: #fdecea;
+  --cor-info: #4338ca;
+  --cor-info-suave: #eceefe;
+
+  /* lateral */
+  --cor-lateral: #0b3532;
+  --cor-lateral-2: #0f4b46;
+  --cor-lateral-texto: #b9e3dc;
+  --cor-lateral-hover: rgba(255, 255, 255, 0.07);
   --cor-lateral-anel: #5eead4;
 
+  /* forma */
   --raio-pequeno: 0.625rem;
-  --raio-grande: 1rem;
-  --sombra-cartao: 0 1px 2px rgba(19, 78, 74, 0.06), 0 16px 40px rgba(19, 78, 74, 0.12);
+  --raio-medio: 0.875rem;
+  --raio-grande: 1.25rem;
+  --sombra-leve: 0 1px 2px rgba(15, 42, 40, 0.05);
+  --sombra-cartao: 0 1px 2px rgba(15, 42, 40, 0.04), 0 8px 24px -8px rgba(15, 42, 40, 0.1);
+  --sombra-elevada: 0 2px 4px rgba(15, 42, 40, 0.04), 0 18px 40px -12px rgba(15, 42, 40, 0.22);
+
+  /* movimento */
+  --ease-saida: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-mola: cubic-bezier(0.34, 1.56, 0.64, 1);
   --transicao: 180ms ease;
+  --duracao-entrada: 520ms;
+
   --fonte: var(--font-nunito), system-ui, sans-serif;
 }
 
@@ -30,6 +59,7 @@
   *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
     animation-iteration-count: 1 !important;
   }
 }

@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "@/public/css/tokens.css";
+import "@/public/css/ui.css";
 import BootstrapClient from "./BootstrapClient";
 import{ Toaster } from 'react-hot-toast';
 
@@ -22,7 +23,20 @@ export default function RootLayout({ children }) {
     <html lang="pt-br" className={`${nunito.variable}`}>
       <body>
         {children}
-        <Toaster/>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            style: {
+              borderRadius: "12px",
+              background: "#0f2a28",
+              color: "#fff",
+              fontWeight: 600,
+              padding: "12px 16px",
+              boxShadow: "0 18px 40px -12px rgba(15,42,40,.4)",
+            },
+            success: { iconTheme: { primary: "#2dd4bf", secondary: "#0f2a28" } },
+          }}
+        />
       </body>
       <BootstrapClient/>
     </html>

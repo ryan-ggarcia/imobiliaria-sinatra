@@ -19,6 +19,15 @@ class ImovelController < BaseController
     erro_interno(ex)
   end
 
+  def find_by(imv_id)
+    imovel = @dao.find_by_id(imv_id, @db)
+    return [404, { msg: 'Imóvel não encontrado!' }] unless imovel
+
+    [200, to_hash(imovel)]
+  rescue => ex
+    erro_interno(ex)
+  end
+
   def cadastrar(params)
     imovel = ImovelModel.new(
       nil,

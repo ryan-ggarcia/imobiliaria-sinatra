@@ -94,6 +94,57 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/Mensagem" }
 
+  /usuario/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: integer }
+    get:
+      tags: [Usuário]
+      summary: Busca um usuário ativo pelo id
+      responses:
+        "200":
+          description: Usuário encontrado (sem a senha)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Usuario" }
+        "401": { $ref: "#/components/responses/NaoAutenticado" }
+        "404": { $ref: "#/components/responses/NaoEncontrado" }
+    put:
+      tags: [Usuário]
+      summary: Atualiza um usuário
+      description: Senha em branco mantém a senha atual; per_id ausente mantém o perfil atual.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [usu_nome, usu_email]
+              properties:
+                usu_nome: { type: string, example: Ana Souza }
+                usu_email: { type: string, format: email, example: ana@email.com }
+                usu_senha: { type: string, minLength: 6, description: "Opcional" }
+                per_id: { type: integer, description: "1 = Administrador, 2 = Locatário" }
+      responses:
+        "200": { $ref: "#/components/responses/Sucesso" }
+        "400": { $ref: "#/components/responses/Invalido" }
+        "401": { $ref: "#/components/responses/NaoAutenticado" }
+        "404": { $ref: "#/components/responses/NaoEncontrado" }
+        "409":
+          description: E-mail já cadastrado para outro usuário
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Mensagem" }
+    delete:
+      tags: [Usuário]
+      summary: Exclui (inativa) um usuário
+      responses:
+        "200": { $ref: "#/components/responses/Sucesso" }
+        "401": { $ref: "#/components/responses/NaoAutenticado" }
+        "404": { $ref: "#/components/responses/NaoEncontrado" }
+
   /imovel:
     get:
       tags: [Imóvel]
@@ -131,6 +182,17 @@ paths:
         in: path
         required: true
         schema: { type: integer }
+    get:
+      tags: [Imóvel]
+      summary: Busca um imóvel pelo id
+      responses:
+        "200":
+          description: Imóvel encontrado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Imovel" }
+        "401": { $ref: "#/components/responses/NaoAutenticado" }
+        "404": { $ref: "#/components/responses/NaoEncontrado" }
     put:
       tags: [Imóvel]
       summary: Atualiza um imóvel

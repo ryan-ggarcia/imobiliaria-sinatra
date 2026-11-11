@@ -8,7 +8,9 @@ export default function AdminLayout({ children }) {
       <Suspense>
         <Menu />
       </Suspense>
-      <main className={styles.conteudo}>{children}</main>
+      <main className={styles.conteudo}>
+        <Suspense>{children}</Suspense>
+      </main>
     </div>
   )
 }

@@ -69,6 +69,11 @@ export class ApiClient {
     }
 
     static async checarResposta(response) {
+        // 204 não tem corpo: response.json() quebraria
+        if(response.status === 204) {
+            return null;
+        }
+
         if(response.ok) {
             const json = await response.json();
             return json;
