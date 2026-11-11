@@ -1,6 +1,8 @@
 import {Nunito} from "next/font/google"
 import Script from "next/script";
 import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 import "@/public/css/tokens.css";
 import BootstrapClient from "./BootstrapClient";
 import{ Toaster } from 'react-hot-toast';
@@ -23,7 +25,6 @@ export default function RootLayout({ children }) {
         <Toaster/>
       </body>
       <BootstrapClient/>
-      <Toaster/>
     </html>
   );
 }

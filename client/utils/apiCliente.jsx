@@ -1,9 +1,9 @@
 import toast from "react-hot-toast";
 export class ApiClient {
 
-    baseUrl = "http://localhost:5000"
+    static baseUrl = "http://localhost:5000"
 
-    headers={"Content-Type":"application/josn"}
+    static headers = { "Content-Type": "application/json" }
 
     static async get(endpoint) {
         const response = await fetch(this.baseUrl + endpoint, {
@@ -68,7 +68,7 @@ export class ApiClient {
         return await this.checarResposta(response);
     }
 
-    async checarResposta(response) {
+    static async checarResposta(response) {
         if(response.ok) {
             const json = await response.json();
             return json;

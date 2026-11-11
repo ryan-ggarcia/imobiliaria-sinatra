@@ -8,7 +8,9 @@
     "start": "next start"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^7.3.1",
     "bootstrap": "^5.3.8",
+    "bootstrap-icons": "^1.13.2",
     "next": "16.4.5",
     "react": "19.3.0",
     "react-dom": "19.3.0"
