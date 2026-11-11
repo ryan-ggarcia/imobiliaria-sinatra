@@ -9,6 +9,7 @@ gem 'bcrypt', '>= 3.1.22'
 gem 'dotenv'
 gem "puma"
 gem "rackup"
+gem "rack-cors"
 
 group :development do
   gem "ruby-lsp", require: false

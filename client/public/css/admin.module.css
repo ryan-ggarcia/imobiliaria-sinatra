@@ -1,0 +1,22 @@
+.shell {
+  min-height: 100vh;
+  background: var(--cor-fundo);
+  color: var(--cor-texto);
+  font-family: var(--fonte);
+}
+
+.conteudo {
+  min-width: 0;
+  padding: 1.5rem 1rem;
+}
+
+@media (min-width: 992px) {
+  .shell {
+    display: flex;
+  }
+
+  .conteudo {
+    flex: 1;
+    padding: 2.5rem 3rem;
+  }
+}

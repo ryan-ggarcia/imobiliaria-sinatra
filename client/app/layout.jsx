@@ -1,7 +1,9 @@
 import {Nunito} from "next/font/google"
 import Script from "next/script";
 import "bootstrap/dist/css/bootstrap.css";
+import "@/public/css/tokens.css";
 import BootstrapClient from "./BootstrapClient";
+import{ Toaster } from 'react-hot-toast';
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -16,8 +18,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="pt-br" className={`${nunito.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Toaster/>
+      </body>
       <BootstrapClient/>
+      <Toaster/>
     </html>
   );
 }

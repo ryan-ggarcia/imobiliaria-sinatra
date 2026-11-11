@@ -1,6 +1,6 @@
-export default function Button({funcao,type='button',texto}){
+export default function Button({funcao,type='button',texto,className='btn btn-primary'}){
     return(
-        <button type={type} onClick={typeof funcao ? funcao : undefined} >
+        <button type={type} className={className} onClick={typeof funcao ? funcao : undefined} >
             {texto}
         </button>
     )

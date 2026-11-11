@@ -2,6 +2,7 @@ require "sinatra/base"
 require "sinatra/json"
 require "json"
 require "dotenv/load" # carrega o .env (ex.: JWT_SEGREDO)
+require "rack/cors"
 
 require_relative "db/db.rb"
 
@@ -19,6 +20,13 @@ class App < Sinatra::Base
     require "sinatra/reloader"
     register Sinatra::Reloader
     also_reload File.join(__dir__, "router", "*.rb")
+  end
+
+  use Rack::Cors do
+    allow do
+      origins "http://localhost:3000"
+      resource "*", headers: :any, methods: %i[get post put delete options], credentials: true
+    end
   end
 
   # exige token JWT em todas as rotas, menos as públicas
