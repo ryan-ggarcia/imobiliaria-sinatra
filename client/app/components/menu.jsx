@@ -68,7 +68,7 @@ export default function Menu() {
   async function sair() {
     await ApiClient.post('/logout', {})
     toast.success('Até logo!')
-    router.push('/')
+    router.push('/login')
   }
 
   return (
