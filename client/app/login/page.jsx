@@ -43,7 +43,7 @@ export default function LoginPage() {
     }
     else{
       toast.success("Login efetuado com sucesso!")
-      router.push("/admin")
+      router.replace("/admin")
     }
       
   }
